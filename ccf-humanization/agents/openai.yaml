@@ -1,0 +1,4 @@
+interface:
+  display_name: "CCF Humanization"
+  short_description: "Required first CCFA preflight; direct, evidence-faithful expression"
+  default_prompt: "Use $ccf-humanization first, then $ccf-common. Compose the scientific argument in familiar field language before checking style; connect sentences through their actual logic, preserve supported strength and meaningful uncertainty, and keep internal readiness checks out of prose. Apply edits only within the authorized scope and reuse active preflights."

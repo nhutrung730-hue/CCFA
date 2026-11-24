@@ -1,0 +1,4 @@
+interface:
+  display_name: "CCF Idea Optimizer"
+  short_description: "Turn rough CCF research directions into concrete problem, gap, insight, method, novelty, and evidence plans."
+  default_prompt: "Apply $ccf-humanization, then $ccf-common. Use $ccf-idea-optimizer to diagnose the missing distinction, information, objective or computation behind the research difficulty before selecting components. Develop substantive mechanisms within the user's objective and constraints, distinguish explanations from observations, and use a discriminating prediction without demanding completed experiments."

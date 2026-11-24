@@ -1,0 +1,72 @@
+# CCFA Skills Catalog
+
+This catalog is the public trigger-conflict index for the current CCFA family. If this document conflicts with a skill's `SKILL.md`, `SKILL.md` is authoritative.
+
+![Runtime catalog](../assets/ccfa-skills-catalog.svg)
+
+## Runtime Skills
+
+| Skill | Stage | Startup condition | 中文触发 | Included modes | Do not use for |
+| --- | --- | --- | --- | --- | --- |
+| `ccf-humanization` | First preflight | Activate before every CCFA skill; keep communication direct while preserving evidence and rigorous criticism. Detailed editing depends on scope. | 所有技能执行前优先启用；去防御性、保留真实证据与严谨判断。 | family-preflight, manuscript-humanization, experiment-humanization, warning-only | Concealing evidence, softening valid criticism, fabricating results, or rewriting without authorization. |
+| `ccf-project-scaffolder` | Setup | Create project folders, copy/select templates, initialize `ccfa.yaml`. | 创建论文项目、复制模板、初始化 `ccfa.yaml`。 | scaffold | Research content generation. |
+| `ccf-pipeline-orchestrator` | Planning | Plan and coordinate research stages, integrate specialist contributions and run explicitly requested autonomous research within its scope and budget. | 拆任务、排阶段、定 gate、决定下一个 owner。 | planning, status, gates, autonomous research campaigns | Taking over specialist scientific deliverables or starting autonomous experiments without a request. |
+| `ccf-idea-optimizer` | Idea | Explore, rescue, and turn rough directions into problem-gap-insight-method-evidence plans. | 优化粗 idea、具象化研究思路、找方向、救方向、形成 problem-gap-insight。 | exploratory idea shaping, rescue routes | Ranking multiple ideas as the main task. |
+| `ccf-idea-reviewer` | Concept judgment | Assess research value, novelty, insight, and mechanism; experiments are outside default scope. | 思路审核、靠谱吗、值得做吗、创新够不够、评分排名；无需指定分数。 | concept review, scoring/ranking, stage-aware triage | Idea development, manuscript evidence review, or unsolicited experiment assessment. |
+| `ccf-literature-monitor` | Monitoring | Track recent arXiv/OpenReview/venue papers, labs, competitors, and novelty-threat signals. | 竞品监控、新论文追踪、最近有没有类似 idea、arXiv/会议动态。 | arxiv-watch, venue-watch, novelty-check, trend-scouting, competitor-tracking | Deep related-work search, citation audit, or final idea scoring. |
+| `ccf-literature-searcher` | Evidence | Search and screen literature, prior art, datasets, benchmarks, and opportunity gaps. | 检索相关工作、prior art、数据集、benchmark、方向调研、open gap。 | search, screening, opportunity map | Auditing only already cited papers or acting as a final idea kill gate. |
+| `ccf-experiment-designer` | Evidence | Design comparisons, interpret observed results, and specify table/figure contents. | 设计实验、baseline、metric、消融，解释真实结果并确定图表内容。 | experiment design, result interpretation, result specifications | Inventing results, implementing training, or rendering publication figures. |
+| `ccf-research-engineer` | Engineering | Select research codebases, implement mechanisms, reproduce baselines, and diagnose or optimize training. | 选择科研代码库、实现研究机制、复现基线并诊断和优化训练。 | codebase selection, implementation, reproduction, training diagnosis, performance | Replacing scientific protocol design, campaign coordination, or ordinary application coding. |
+| `ccf-visual-composer` | Visual evidence | Understand the scientific message, render selected data templates with Python, and create/redraw diagrams through prompt expansion, GPT Image generation and same-prompt refinement. | 数据图沿用原JSON/Python；流程图P→G0→G1三阶段；已有图局部修改；PNG交付；不做流程图矢量重建。 | visual-contract, figure-design, architecture-generation, diagram-refinement, existing-source-edit, python-plotting, table-design, layout-integration, render-qa | Designing experiments, inventing results/components, writing manuscript prose or final submission compliance. |
+| `ccf-paper-to-exemplar` | Writing support | Convert paper PDFs into reusable writing exemplar cards for `ccf-paper-writer`. | 把论文 PDF 转成写作范例卡、建立个人 exemplar 库。 | exemplar extraction, style-pattern cards, custom exemplar registration | Writing papers or performing review. |
+| `ccf-paper-writer` | Manuscript | Draft, revise, polish, compress, and presentation-adapt manuscripts; preserve supplied science and edit format, develop content before requested page fitting. | 写作、润色、压缩与演示稿；保留科学内容和编辑格式，先完整表达，再按请求适配会议与篇幅。 | draft, polish, compression, venue-aware drafting, presentation | Full review, evidence audit, package check, rebuttal. |
+| `ccf-paper-reviewer` | Review | Review manuscripts scientifically and stylistically. | 科学审稿、写作评审、格式风险、评分、AC/meta-review。 | scientific review, writing review, format-facing review | Rewriting manuscript text or drafting rebuttals. |
+| `ccf-integrity-auditor` | Audit | Audit claims, numbers, figures/tables, citations, and BibTeX. | 审计 claim、数字、图表、引用、BibTeX 和上下文支撑。 | claim audit, numeric audit, citation audit | Full scientific review or broad literature search. |
+| `ccf-submission-checker` | Submission | Check venue rules, LaTeX/PDF package, anonymity, metadata, artifacts. | 查会议格式、模板页数、匿名、PDF metadata、artifact/reproducibility。 | venue format, package check, artifact | Polishing manuscript content. |
+| `ccf-rebuttal-writer` | Post-review | Write rebuttals, response letters, revision ledgers, resubmission plans. | 写 rebuttal、response letter、revision ledger、重投计划。 | rebuttal, ledger, response letter, resubmission | Ordinary manuscript writing. |
+| `ccf-common` | Shared preflight | Activate after Humanization before every specialist; apply shared scope, routing, prerequisites, evidence, and artifact rules. | 所有技能执行前启用共享规则；兼顾家族规则维护。 | family-preflight, governance | Taking over research deliverables or running maintenance merely because it was activated. |
+| `ccf-skill-forger` | Maintenance | Maintain skills, routing, docs, SVG diagrams, validation, and releases. | 维护 skills、路由、README、SVG、校验和 release。 | skill maintenance, docs/SVG maintenance | Research writing, review, or experiments. |
+
+## Merged Entries
+
+| Removed standalone skill | Current owner | Why |
+| --- | --- | --- |
+| `ccf-workflow-planner` | `ccf-pipeline-orchestrator` | Planning and orchestration are the same project-control layer. |
+| `ccf-paper-compressor` | `ccf-paper-writer` | Compression changes manuscript text and must share writing safeguards. |
+| `ccf-writing-reviewer` | `ccf-paper-reviewer` | Writing review is a review mode, not a separate runtime owner. |
+| `ccf-citation-auditor` | `ccf-integrity-auditor` | Citation verification is evidence integrity. |
+| `ccf-figure-table-builder` | `ccf-experiment-designer`, then `ccf-visual-composer` | Evidence/result content depends on real experiment values; publication visual composition, palette, caption placement, and render QA belong to visual composer. |
+| `ccf-artifact-packager` | `ccf-submission-checker` | Artifact readiness is submission readiness. |
+| `ccf-venue-format-guide` | `ccf-submission-checker` | Venue format lookup is a submission gate; writing still reads venue references. |
+| `ccf-resubmission-adapter` | `ccf-rebuttal-writer` | Resubmission follows reviewer-response and revision-ledger logic. |
+| `ccf-paper-presenter` | `ccf-paper-writer` | Slides/posters/talk scripts are paper-derived writing outputs. |
+| `ccf-doc-diagram-designer` | `ccf-skill-forger` | Docs SVGs are repository maintenance. |
+
+## Conflict Rules
+
+![Routing boundaries](../assets/ccfa-skills-routing.svg)
+
+- Non-review workflow skills should follow the user's requested output shape. Their internal checklists are safeguards, not mandatory visible report templates.
+- Every CCFA skill receives `ccf-humanization` first and `ccf-common` second. Reuse applicable active rules across contributors without recursive startup. Detailed rewriting and experiment checks remain conditional; assessment-only work preserves the assessed artifact and rigorous criticism. Specialist ownership and explicit scope remain intact.
+- Review, audit, and submission-gate skills may remain structured because their job is traceable diagnosis and pass/fail risk control.
+- Full-workflow and full-paper prompts should produce the requested artifacts, not route summaries. A manuscript request should leave a manuscript; an autonomous-research request should leave the actual research results and needed records. Rebuttal, submission, and separate reviews apply when the task calls for them.
+- Idea exploration, rescue, and shaping go to `ccf-idea-optimizer`; concept judgment, including natural questions without score wording, goes to `ccf-idea-reviewer`. Route by the requested judgment even when a full manuscript is supplied. Idea and paper reports use separate detailed review structures by default, with brief output on explicit request; only manuscript scientific review evaluates experiment completeness by default.
+- Recent-paper watching, competitor tracking, and "is there a new similar idea?" go to `ccf-literature-monitor`; deep related-work discovery and opportunity mapping go to `ccf-literature-searcher`; existing citation verification goes to `ccf-integrity-auditor`.
+- Early exploration investigates the source of the limitation and meaningful mechanism changes. Preserve the user's goal while updating a route for a specific conceptual, empirical, or resource reason; repeated weak scores alone do not justify endless small repairs.
+- Manuscript rewriting, compression, and presentation outputs go to `ccf-paper-writer`; judgment goes to `ccf-paper-reviewer`.
+- PDF-to-exemplar conversion goes to `ccf-paper-to-exemplar`; actual manuscript drafting still goes to `ccf-paper-writer`.
+- Draft the scientific content before fitting pages. When page fitting is requested, `ccf-paper-writer` restores missing content or compresses redundancy as needed; final venue/page compliance goes to `ccf-submission-checker`. Empty space alone does not justify padding.
+- Real result/evidence structure goes to `ccf-experiment-designer`; publication-grade data figures and research method/architecture diagrams, including the three-stage GPT Image raster workflow and faithful Python template rendering, go to `ccf-visual-composer`; repository documentation diagrams go to `ccf-skill-forger`.
+- Venue requirements, package checks, anonymity, and artifact readiness go to `ccf-submission-checker`.
+- Reviewer responses, revision ledgers, and resubmission plans go to `ccf-rebuttal-writer`.
+
+## Venue Guides
+
+The legacy per-venue runtime layer remains reference-only:
+
+- `ccf-paper-writer/references/venue-guides/index.md`
+- `ccf-paper-writer/references/venue-guides/<venue>.md`
+
+Use `ccf-paper-writer` for venue-aware manuscript text and `ccf-submission-checker` for venue/package compliance.
+
+All file-producing modes follow the shared artifact contract: existing destinations first, stable task/artifact working directories, current-file updates, and preserved source evidence. A local visual update reuses its editable source and assets. Reference loading and checks are scoped to the current mode and affected dependencies; full requested scientific coverage is preserved.

@@ -1,0 +1,66 @@
+﻿# 自动更新 CCFA Skills
+
+[返回主页](../../README.md) · [Codex](CODEX.md) · [Claude Code](CLAUDE_CODE.md) · [Cursor](CURSOR.md) · [Gemini CLI](GEMINI_CLI.md)
+
+## 轻量 release 的更新
+
+下载并核验新版 lean 包，解压到新的来源目录，再用包内安装器指向原来的 skills 根目录：
+
+```text
+python -B "<new-lean-dir>/tools/install_release.py" --source "<new-lean-dir>" --target "<skills-root>" --dry-run
+python -B "<new-lean-dir>/tools/install_release.py" --source "<new-lean-dir>" --target "<skills-root>"
+```
+
+安装器读取自己的 `.ccfa-release-receipt.json`，只更新仍与旧安装哈希一致的文件。lean manifest 是所选技能及依赖资源的完整清单：以前受安装器管理、现在已移除且没有个人修改的旧文件会一并清理。`--dry-run` 用 `retired_files` 和 `retired_paths` 列出这些文件。待更新或退役的文件如有个人修改，整次操作会在写入前停止并报告路径，先合并再重试。未受管文件、额外用户文件、偏好与可选 papers PDF 保留；没有强制覆盖选项。只更新子集时继续使用相同的 `--skill` 列表，其他已装技能不会被卸载。
+
+完整范例 PDF 通过同版 papers 包显式添加，不自动下载；旧 PDF 也不自动删除。原文 Markdown、范例卡、模板与图例仍在 lean 中。包的 SHA-256、部分安装和补充 PDF 用法见[安装矩阵](../INSTALLATION_MATRIX.zh-CN.md#轻量-release-安装推荐)。首次接管手动或 npx 安装时，完全相同的文件可以登记；有差异的文件先合并，避免覆盖个人调整。release 安装不由 `npx skills update` 管理。
+
+## npx/Git 完整源码的更新命令
+
+通过 `npx skills` 安装时：
+
+```bash
+npx skills update --global --yes
+```
+
+更新不会让已运行会话重新加载 skill。完成后请开启新会话。这条命令和下方定时任务更新由 CLI 管理的 skills；单独复制的相邻模板与资源不在其中。需要完整目录保持同一版本时，使用下方稳定 clone 的安装与资源同步步骤。
+
+更新前先比较安装副本中的个人修改与仓库版本，将需要保留的改进合并或另存到明确的维护位置；不要用整目录覆盖代替差异核对。个人偏好保存在安装目录之外的 `$CODEX_HOME/ccfa/preferences.json`（未设置时为 `~/.codex/ccfa/preferences.json`）及项目 `.ccfa/preferences.json`，更新时保留。配置页与解析器随 `ccf-common` 一起更新，普通任务无需启动网页服务。
+
+## Windows 任务计划
+
+```powershell
+schtasks /Create /SC WEEKLY /D SUN /TN "CCFA Skills Update" /TR "cmd.exe /c npx skills update --global --yes" /ST 09:00 /F
+schtasks /Query /TN "CCFA Skills Update" /V /FO LIST
+```
+
+取消：
+
+```powershell
+schtasks /Delete /TN "CCFA Skills Update" /F
+```
+
+如果计划任务找不到 `npx`，先运行 `Get-Command npx`，再把任务中的命令替换为显示的绝对路径。不要把访问令牌或 API key 写入任务命令。
+
+## macOS/Linux cron
+
+```bash
+(crontab -l 2>/dev/null; echo '0 9 * * 1 cd "$HOME" && /usr/bin/env npx skills update --global --yes >> "$HOME/.ccfa-skills-update.log" 2>&1') | crontab -
+crontab -l
+tail -n 50 "$HOME/.ccfa-skills-update.log"
+```
+
+取消时运行 `crontab -e`，删除对应行。
+
+## 稳定 clone
+
+若使用本地 clone 作为单一来源，`git pull` 只更新源码。此前通过 `--copy` 安装时，还要从更新后的 clone 重新安装。以下以 Codex 全量安装为例；其他客户端应使用最初的 `--agent`，部分安装应保持原来的 `--skill` 列表：
+
+```bash
+git -C "$HOME/ai-skills/CCFA-Skills" pull --ff-only
+npx skills add "$HOME/ai-skills/CCFA-Skills" --global --agent codex --skill '*' --yes --copy
+```
+
+随后进入这个 clone 的根目录，执行[相邻资源补齐命令](../INSTALLATION_MATRIX.zh-CN.md#sibling-resources)，将目标设为对应客户端的实际安装根目录。这样 skills、参考文件和模板来自同一版本。仅拉取仓库或只运行 `npx skills update`，都不能替代这一步。
+
+`--ff-only` 会在本地存在分叉提交时停止，不会静默覆盖修改。重新安装可能覆盖安装副本中的个人修改，应先按上文比较和保留；资源合并复制不自动删除上游移除的旧文件。需要持续清理受管退役文件时，改用同版本 lean 包的安装器；首次接管前仍须核对差异。开发用 clone 与自动更新 clone 应分开。

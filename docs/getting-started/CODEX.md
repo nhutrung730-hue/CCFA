@@ -1,0 +1,91 @@
+# 在 Codex 中使用 CCFA Skills
+
+[返回主页](../../README.md) · [Claude Code](CLAUDE_CODE.md) · [Cursor](CURSOR.md) · [Gemini CLI](GEMINI_CLI.md) · [其他 Agent](OTHER_AGENTS.md)
+
+## 前置条件
+
+- 推荐轻量 release 安装只需 Python 3.10+。
+- 下方完整源码方案需要 Git；使用 `npx skills` 还需 Node.js 22.20.0 或更高版本（本地核验 `skills` CLI 1.5.22 的要求；其他版本以安装器的 `engines` 声明为准）。
+- Codex 会自动检测 skill 变化；如果更新未显示，再重启 Codex。官方加载规则见 [Build skills](https://learn.chatgpt.com/docs/build-skills)。
+
+## 推荐安装
+
+下载并解压 [0.12.1 的 lean 包](https://github.com/mikubaka88/CCFA-Skills/releases/tag/v0.12.1)，按[安装矩阵](../INSTALLATION_MATRIX.zh-CN.md#轻量-release-安装推荐)核验 SHA-256。将 `<lean-dir>` 换成解压后的 `ccfa-skills-0.12.1-lean` 目录，将 `<skills-root>` 换成 Codex 实际技能根目录（全局安装通常为 `$CODEX_HOME/skills`，未设置时为 `~/.codex/skills`）：
+
+```text
+python -B "<lean-dir>/tools/install_release.py" --source "<lean-dir>" --target "<skills-root>" --dry-run
+python -B "<lean-dir>/tools/install_release.py" --source "<lean-dir>" --target "<skills-root>"
+```
+
+这条路线保留 18 个技能、相邻模板、真实原文 Markdown 与绘图素材，完整范例 PDF 按需显式安装。更新保护个人改动和偏好，并清理所选范围内未改动的受管退役文件；见[更新说明](AUTO_UPDATE.md)。
+
+## Git 与 npx 完整源码方案
+
+这条路线仍下载仓库中的完整 PDF；需要完整离线源码或自行维护时使用。
+
+先查看仓库中可安装的 skills：
+
+```powershell
+npx skills add mikubaka88/CCFA-Skills --list
+```
+
+将全部 18 个 skills 安装到 Codex：
+
+```powershell
+npx skills add mikubaka88/CCFA-Skills --global --agent codex --skill '*' --yes --copy
+```
+
+这条命令仅复制 skill 目录；使用 LaTeX 模板或部分安装时，请从同一版本的仓库[补齐相邻资源](../INSTALLATION_MATRIX.zh-CN.md#sibling-resources)。
+
+只安装部分 skills 时必须包含两个前置模块：`ccf-humanization` 和 `ccf-common`。例如：
+
+```powershell
+npx skills add mikubaka88/CCFA-Skills --global --agent codex --skill ccf-common --skill ccf-humanization --skill ccf-paper-writer --skill ccf-visual-composer --yes --copy
+```
+
+验证：
+
+```powershell
+npx skills list --global --agent codex
+```
+
+确认列表中已显示所需 skills 后，直接描述任务：
+
+```text
+使用 CCFA Skills 检索这个方向的公开 benchmark，并设计主实验与消融；不要虚构结果。
+```
+
+## 更新与自动更新
+
+```powershell
+npx skills update --global --yes
+```
+
+Windows 每周自动更新：
+
+```powershell
+schtasks /Create /SC WEEKLY /D SUN /TN "CCFA Skills Update" /TR "cmd.exe /c npx skills update --global --yes" /ST 09:00 /F
+```
+
+macOS/Linux 每周自动更新：
+
+```bash
+(crontab -l 2>/dev/null; echo '0 9 * * 1 cd "$HOME" && /usr/bin/env npx skills update --global --yes >> "$HOME/.ccfa-skills-update.log" 2>&1') | crontab -
+```
+
+更新后检查 skill 列表；若仍显示旧内容，再重启 Codex。单独复制的相邻资源需从同一版本同步；本地 clone 的 `--copy` 安装也需要刷新安装副本，见[自动更新说明](AUTO_UPDATE.md)。
+
+## 稳定 clone 方案
+
+需要审阅源码、固定版本或自行修改时，可从稳定 clone 安装：
+
+```powershell
+git clone https://github.com/mikubaka88/CCFA-Skills.git
+Set-Location CCFA-Skills
+git pull --ff-only
+npx skills add . --global --agent codex --skill '*' --yes --copy
+```
+
+不要只复制 `SKILL.md`；`references/`、`scripts/`、`resources/` 与 `ccf-common` 都是家族的一部分。部分模式还读取相邻 skill 的参考文件，以及仓库根目录的 `ccf-latex-templates/`。安装器若仅复制 skill 目录，须在实际安装根目录保留相同的相邻资源关系；只在源码 clone 中存在模板不足以保证安装副本可用。复制完成后执行[相邻资源补齐命令](../INSTALLATION_MATRIX.zh-CN.md#sibling-resources)。后续更新须先拉取仓库，再重新执行安装与资源复制；仅 `git pull` 不会更新 `--copy` 副本。
+
+路径需区分安装入口：本地核对的 `skills` CLI 1.5.22 将 Codex 项目安装放在 `.agents/skills`，全局安装放在 `$CODEX_HOME/skills`（未设置或为空时为 `~/.codex/skills`）。手动安装或其他客户端版本可使用不同的发现目录；以当前客户端说明及实际安装位置为准，不能把项目路径套用到所有全局安装。仓库的 Codex 插件清单通过 `skills: "./"` 指向现有根目录，保留全部家族和相邻模板；插件分发方式见 [Build plugins](https://learn.chatgpt.com/docs/build-plugins)。本次静态验证不等同于在每个客户端完成安装测试。
