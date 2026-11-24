@@ -1,0 +1,21 @@
+
+{
+  "name": "ccfa",
+  "interface": {
+    "displayName": "CCFA Skills"
+  },
+  "plugins": [
+    {
+      "name": "ccfa-skills",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
